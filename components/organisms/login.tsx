@@ -1,9 +1,26 @@
+import { useState, useEffect } from "react";
 import LoginGithub from "react-login-github";
 import { ButtonWrapper } from "../atoms/buttonWrapper";
 
+interface IResponse {
+  code: string;
+}
+
 export default function Login() {
-  const onSuccess = (response: JSON) => console.log(response);
-  const onFailure = (response: JSON) => console.error(response);
+  const [error, setError] = useState(false);
+  const [code, setCode] = useState("");
+
+  const onSuccess = (response: IResponse) => {
+    setCode(response.code);
+  };
+  const onFailure = (response: JSON) => {
+    console.error(response);
+    setError(true);
+  };
+
+  useEffect(() => {
+    //set data to store
+  }, [code]);
 
   return (
     <ButtonWrapper>
@@ -13,6 +30,7 @@ export default function Login() {
         onSuccess={onSuccess}
         onFailure={onFailure}
       />
+      {error === true && <p>Error, try again later</p>}
     </ButtonWrapper>
   );
 }

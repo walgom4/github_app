@@ -1,12 +1,22 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import dynamic from "next/dynamic";
-import { ButtonSearch } from "../components/atoms/buttonSearch";
+import { ButtonSearch } from "@components/atoms/buttonSearch";
+import GitHubLogo from "@components/atoms/githubLogo";
+import InputSearch from "@components/atoms/inputSearch";
+import Logo from "@public/logo.svg";
+import { useState } from "react";
 
 const Search: NextPage = () => {
+  const [searchValue, setSearchValue] = useState("");
   const handleClick = () => {
-    console.log("click search");
+    console.log("click search", searchValue);
+  };
+  const handleInputClick = () => {
+    console.log("click input search", searchValue);
+  };
+  const handleChange = (value: string) => {
+    setSearchValue(value);
   };
   return (
     <div className={styles.container}>
@@ -17,8 +27,13 @@ const Search: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1>logo git</h1>
-        <h1>input search</h1>
+        <GitHubLogo />
+        <InputSearch
+          inputOnChange={(value: string) => handleChange(value)}
+          inputOnClick={() => {
+            handleInputClick();
+          }}
+        />
         <ButtonSearch
           key="btnSearch"
           type="button"

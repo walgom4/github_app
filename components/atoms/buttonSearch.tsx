@@ -14,4 +14,8 @@ export const ButtonSearch = styled.button<IProps_Button>`
   font-size: 16px;
   line-height: 21px;
   padding: 10px 34px;
+  margin-top: 10px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
