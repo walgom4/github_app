@@ -1,10 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
-// import LoginGithub from "react-login-github";
 import dynamic from "next/dynamic";
-import type { LoginGithub as ComponentType } from "react-login-github";
 
 const Home: NextPage = () => {
   const Login = dynamic(() => import("../components/organisms/login"), {
@@ -20,7 +17,6 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Login</h1>
         <Login />
       </main>
 
