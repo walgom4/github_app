@@ -1,26 +1,42 @@
 import { useState, useEffect } from "react";
 import LoginGithub from "react-login-github";
 import { ButtonWrapper } from "../atoms/buttonWrapper";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@store/store";
+import { setCode, setError, setToken } from "@store/slice/loginSlice";
+import { useRouter } from "next/router";
+import useSWR from "swr";
+import { fetcherToken, IData } from "services/request";
 
 interface IResponse {
   code: string;
 }
 
 export default function Login() {
-  const [error, setError] = useState(false);
-  const [code, setCode] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { code, error, token } = useSelector((state: RootState) => state.login);
 
-  const onSuccess = (response: IResponse) => {
-    setCode(response.code);
+  // success login github
+  const onSuccess = async (response: IResponse) => {
+    dispatch(setError(false));
+    dispatch(setCode(response.code));
+    //get token
+    const token = await fetcherToken(response.code);
+    dispatch(setToken(token.data.access_token));
   };
+  // fail login
   const onFailure = (response: JSON) => {
-    console.error(response);
-    setError(true);
+    dispatch(setCode(""));
+    dispatch(setError(true));
   };
 
   useEffect(() => {
-    //set data to store
-  }, [code]);
+    if (code !== "" && token !== "") {
+      // redirect
+      router.push(`/search`);
+    }
+  }, [code, token, router]);
 
   return (
     <ButtonWrapper>

@@ -9,11 +9,11 @@ interface GitHubLogoProps {
 export default function GitHubLogo({
   width = 205,
   height = 70,
-  src = Logo,
+  src = Logo.src,
 }: GitHubLogoProps) {
   return (
     <Logo
-      viewbox={`0 0 205 70`}
+      viewBox={`0 0 205 70`}
       src={src}
       alt="GitHub Logo"
       width={width}
