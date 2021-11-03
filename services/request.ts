@@ -33,6 +33,76 @@ export interface IDataUser {
         name?:string,
     }
 }
+
+export interface IDataRepository {
+    search: Search;
+}
+
+export interface Search {
+    edges:           SearchEdge[];
+    pageInfo:        PageInfo;
+    repositoryCount: number;
+}
+
+export interface SearchEdge {
+    node: Node;
+}
+
+export interface Node {
+    id:             string;
+    name:           string;
+    nameWithOwner:  string;
+    owner:          Owner;
+    stargazerCount: number;
+    languages:      Languages;
+    licenseInfo:    LicenseInfo | null;
+    updatedAt:      Date;
+    description:    string;
+}
+
+export interface Languages {
+    edges: LanguagesEdge[];
+}
+
+export interface LanguagesEdge {
+    node: LicenseInfo;
+}
+
+export interface LicenseInfo {
+    name: string;
+}
+
+export interface Owner {
+    login: string;
+}
+
+export interface PageInfo {
+    endCursor:   string;
+    hasNextPage: boolean;
+    startCursor: string;
+}
+
+export interface IDataUsers {
+  search: SearchUser;
+}
+
+export interface SearchUser {
+  pageInfo: PageInfo;
+  edges:    Edge[];
+}
+
+export interface Edge {
+  node: NodeUser;
+}
+
+export interface NodeUser {
+  id:    string;
+  email: string;
+  name:  string;
+  login: string;
+  bio:   string;
+}
+
 export const fetcherToken = (code:string) => fetch(`${BASE_URL_TOKEN}`, 
     {
         method:'POST',
@@ -53,25 +123,71 @@ export const fetcherUserInfo = async (autToken:string) => {
     return data;
 }
 
-export const fetcherData = async (autToken:string, query: string, isRepository:boolean, after: string) => {
+export const fetcherData = async (autToken:string, query: string, isRepository:boolean, after: string | null = null) => {
     const queryData = `{
-        search(query: ${query}, type: REPOSITORY, first: 10, after: ${after}) {
+        search(query: "${query}", type: REPOSITORY, first: 10${after !== null ? ', after:':''}${after !== null ? after:''}) {
             edges {
-            node {
-                ... on Repository {
-                id
-                name
+                node {
+                  ... on Repository {
+                    id
+                    name
+                    nameWithOwner
+                    owner {
+                      login
+                    }
+                    stargazerCount
+                    languages(first: 1) {
+                      edges {
+                        node {
+                          name
+                        }
+                      }
+                    }
+                    licenseInfo {
+                      name
+                    }
+                    updatedAt
+                    description
+                  }
                 }
-            }
-            }
-            pageInfo {
-            endCursor
-            hasNextPage
-            startCursor
-            }
+              }
+              pageInfo {
+                endCursor
+                hasNextPage
+                startCursor
+              }
+              repositoryCount
         }
     }`;
+    
     client.setHeader('authorization', `Bearer ${autToken}`);
-    const data:IDataUser = await client.request(queryData);
+    const data: IDataRepository = await client.request(queryData);
+    return data;
+}
+
+export const fetcherUsers = async (autToken:string, query: string, isRepository:boolean, after: string | null = null) => {
+    const queryData = `{
+      search(query: "${query}", type: USER, first: 10${after !== null ? ', after:':''}${after !== null ? after:''}) {
+        pageInfo {
+          endCursor
+          hasNextPage
+          startCursor
+        }
+        edges {
+          node {
+            ... on User {
+              id
+              email
+              name
+              login
+              bio
+            }
+          }
+        }
+      }
+    }`;
+    
+    client.setHeader('authorization', `Bearer ${autToken}`);
+    const data: IDataRepository = await client.request(queryData);
     return data;
 }

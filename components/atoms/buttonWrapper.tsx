@@ -1,5 +1,10 @@
 import styled from "styled-components";
 export const ButtonWrapper = styled.div`
+  padding-top: 360px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   button {
     width: 179px;
     height: 50px;
@@ -12,5 +17,6 @@ export const ButtonWrapper = styled.div`
     font-weight: bold;
     font-size: 16px;
     line-height: 21px;
+    cursor: pointer;
   }
 `;

@@ -32,11 +32,20 @@ export const loginSlice = createSlice({
     },
     setBio: (state, action) => {
       state.bio = `${action.payload}`
+    },
+    setReset: (state, action) => {
+      state.code= '';
+      state.token= '';
+      state.error= false;
+      state.login= '';
+      state.avatar= '';
+      state.name= '';
+      state.bio= '';
     }
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { setCode, setToken, setError, setLogin, setAvatar, setName, setBio } = loginSlice.actions
+export const { setCode, setToken, setError, setLogin, setAvatar, setName, setBio, setReset } = loginSlice.actions
 
 export default loginSlice.reducer

@@ -1,20 +1,32 @@
 import styled from "styled-components";
+import BgImage from "@public/Rectangle.svg";
 
 interface ProfileMenuProps {
-  width?: number;
-  height?: number;
-  src?: any;
+  onClick: () => void;
 }
 
-const ProfilePicWrapper = styled.div`
-  & img {
-    border-radius: 100px;
+const ProfileMenuWrapper = styled.div`
+  position: relative;
+  & .menu {
+    font-size: 16px;
+    line-height: 21px;
+    color: #ff1733;
+    top: 98px;
+    left: 95px;
+    position: absolute;
+    cursor: pointer;
   }
 `;
 
-export default function ProfileMenu({
-  width = 50,
-  height = 50,
-}: ProfileMenuProps) {
-  return <div></div>;
+export default function ProfileMenu({ onClick }: ProfileMenuProps) {
+  return (
+    <>
+      <ProfileMenuWrapper>
+        <BgImage />
+        <div className="menu" onClick={() => onClick()}>
+          Logout
+        </div>
+      </ProfileMenuWrapper>
+    </>
+  );
 }

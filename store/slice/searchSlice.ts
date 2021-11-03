@@ -8,7 +8,9 @@ export const searchSlice = createSlice({
     first: 10,
     after: '',
     hasNextPage: '',
-    startCursos:''
+    startCursos:'',
+    repositorySearch: null,
+    userSearch: null,
   },
   reducers: {
     setKeyword: (state, action) => {
@@ -22,11 +24,17 @@ export const searchSlice = createSlice({
     },
     setAfter: (state, action) => {
       state.after = action.payload
-    }
+    },
+    setRepositorySearch: (state, action) => {
+      state.repositorySearch = action.payload
+    },
+    setUserSearch: (state, action) => {
+      state.userSearch = action.payload
+    },
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { setKeyword, setIsRepository } = searchSlice.actions
+export const { setKeyword, setIsRepository, setRepositorySearch, setUserSearch} = searchSlice.actions
 
 export default searchSlice.reducer
