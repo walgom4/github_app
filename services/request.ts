@@ -89,6 +89,7 @@ export interface IDataUsers {
 export interface SearchUser {
   pageInfo: PageInfo;
   edges:    Edge[];
+  userCount: number;
 }
 
 export interface Edge {
@@ -123,9 +124,9 @@ export const fetcherUserInfo = async (autToken:string) => {
     return data;
 }
 
-export const fetcherData = async (autToken:string, query: string, isRepository:boolean, after: string | null = null) => {
+export const fetcherData = async (autToken:string, query: string, after: string | null = null) => {
     const queryData = `{
-        search(query: "${query}", type: REPOSITORY, first: 10${after !== null ? ', after:':''}${after !== null ? after:''}) {
+        search(query: "${query}", type: REPOSITORY, first: 10${after !== null ? ', after:':''}${after !== null ? ('"'+after+'"'):''}) {
             edges {
                 node {
                   ... on Repository {
@@ -165,9 +166,9 @@ export const fetcherData = async (autToken:string, query: string, isRepository:b
     return data;
 }
 
-export const fetcherUsers = async (autToken:string, query: string, isRepository:boolean, after: string | null = null) => {
+export const fetcherUsers = async (autToken:string, query: string, after: string | null = null) => {
     const queryData = `{
-      search(query: "${query}", type: USER, first: 10${after !== null ? ', after:':''}${after !== null ? after:''}) {
+      search(query: "${query}", type: USER, first: 10${after !== null ? ', after:':''}${after !== null ? ('"'+after+'"'):''}) {
         pageInfo {
           endCursor
           hasNextPage
@@ -184,6 +185,7 @@ export const fetcherUsers = async (autToken:string, query: string, isRepository:
             }
           }
         }
+        userCount
       }
     }`;
     

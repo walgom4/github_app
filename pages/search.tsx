@@ -13,13 +13,13 @@ import {
   fetcherUserInfo,
   fetcherUsers,
   IDataRepository,
-  IDataUser,
   IDataUsers,
   SearchEdge,
 } from "services/request";
 import ProfileInfo from "@components/molecules/profileInfo";
 import { setAvatar, setLogin, setName } from "@store/slice/loginSlice";
 import {
+  setCurrentPage,
   setIsRepository,
   setKeyword,
   setRepositorySearch,
@@ -32,6 +32,7 @@ import ResultsQuantity from "@components/atoms/resultsQuantity";
 import ItemUser from "@components/molecules/itemUser";
 import ItemRepository from "@components/molecules/itemRepository";
 import { detailsFormat } from "@utils/utils";
+import Paginator from "@components/organisms/paginator";
 
 const SearchBarWrapper = styled.div`
   position: relative;
@@ -107,18 +108,19 @@ const Search: NextPage = () => {
     }
   }, [dispatch, token]);
 
+  useEffect(() => {
+    window.scroll({ top: 0, left: 0, behavior: "smooth" });
+  }, [keyword, repositorySearch, userSearch]);
+
   const [searchValue, setSearchValue] = useState("");
   // searching users and repositories by keyword
   const searchData = (search: string) => {
     dispatch(setKeyword(search));
-    fetcherData(token, search, true).then((response) => {
-      dispatch(setIsRepository(true));
-      console.log("data", response);
-
+    dispatch(setCurrentPage(1));
+    fetcherData(token, search).then((response) => {
       dispatch(setRepositorySearch(response));
     });
-    fetcherUsers(token, search, true).then((response) => {
-      console.log("users", response);
+    fetcherUsers(token, search).then((response) => {
       dispatch(setUserSearch(response));
     });
   };
@@ -173,9 +175,13 @@ const Search: NextPage = () => {
             {repositorySearch !== null &&
               repositorySearch.search.repositoryCount && (
                 <UsersRepositories
-                  users={100}
+                  users={userSearch.search.userCount}
                   repositories={repositorySearch.search.repositoryCount}
-                  isRepository={true}
+                  isRepository={isRepository}
+                  changeSelection={(selected) => {
+                    dispatch(setIsRepository(selected));
+                    dispatch(setCurrentPage(1));
+                  }}
                 />
               )}
             <div className="col2">
@@ -217,6 +223,7 @@ const Search: NextPage = () => {
                       />
                     )
                 )}
+              {(repositorySearch || userSearch) && <Paginator />}
               {/* <ItemUser login="walgom" name="Walter" bio="software developer" />
               <ItemUser login="walgom" name="Walter" bio="software developer" />
               <ItemUser login="walgom" name="Walter" bio="software developer" /> */}

@@ -1,3 +1,6 @@
+import { ButtonSearch } from "@components/atoms/buttonSearch";
+import { buffer } from "stream/consumers";
+
 export const quantityFormater = (quantity:number) => {
     const returnValue:string = quantity < 1000 ? `${quantity}` : `${Math.trunc(quantity/1000)}k`;
     return returnValue;
@@ -30,4 +33,13 @@ export const detailsFormat = (stars:string ="", language: string ="", license: s
         returnData += ' -';
     }
     return returnData;
+}
+
+export const getCursor= (page:number)=>{
+    return Buffer.from(`cursor:${page}`).toString('base64');
+}
+export const getNumber= (cursor:string)=>{
+    const decodeStr = Buffer.from(cursor, 'base64').toString();
+    const decodeArr = decodeStr.split(":");
+    return parseInt(decodeArr[1], 10);
 }

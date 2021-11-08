@@ -5,6 +5,7 @@ interface UsersRepositoriesProps {
   repositories: number;
   users: number;
   isRepository: boolean;
+  changeSelection: (selected: boolean) => void;
 }
 
 const UserRepositoriesWrapper = styled.div`
@@ -20,6 +21,7 @@ const UserRepositoriesWrapper = styled.div`
     width: 220px;
     height: 40px;
     padding: 10px;
+    cursor: pointer;
   }
   & .selected {
     background-color: #f7f7f8;
@@ -35,15 +37,26 @@ export default function UsersRepositories({
   repositories,
   users,
   isRepository,
+  changeSelection,
 }: UsersRepositoriesProps) {
   return (
     <>
       <UserRepositoriesWrapper>
-        <div className={`item ${isRepository === true ? "selected" : ""}`}>
+        <div
+          className={`item ${isRepository === true ? "selected" : ""}`}
+          onClick={() => {
+            changeSelection(true);
+          }}
+        >
           <div className="description">Repositories</div>
           <div className="quantity">{quantityFormater(repositories)}</div>
         </div>
-        <div className={`item ${isRepository === false ? "selected" : ""}`}>
+        <div
+          className={`item ${isRepository === false ? "selected" : ""}`}
+          onClick={() => {
+            changeSelection(false);
+          }}
+        >
           <div className="description">Users</div>
           <div className="quantity">{quantityFormater(users)}</div>
         </div>
